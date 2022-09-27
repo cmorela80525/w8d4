@@ -11,6 +11,7 @@ const mongoose = require("mongoose");
 //Mongoose Connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 //Set Up View Engine
@@ -26,7 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/flights", (req, res) => {
   Flight.find({}, (error, allFlights) => {
     res.render("Index", {
-      poops: allFlights,
+      flights: allFlights,
     });
   });
 });
@@ -43,6 +44,14 @@ app.post("/flights", (req, res) => {
 });
 
 //Show
+
+app.get("/flights/:id", (req, res) => {
+  Flight.findOne({ _id: req.params.id }, (error, foundFlight) => {
+    res.render("Show", {
+      flight: foundFlight,
+    });
+  });
+});
 
 app.listen(3000, () => {
   console.log("listening");
